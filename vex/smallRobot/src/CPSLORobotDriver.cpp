@@ -59,7 +59,7 @@ namespace CPSLO {
 
   /**
    *
-   * CP ROBOT MOTOR
+   *  MOTOR
    *
    */
   Motor::Motor(int portNum) : motor(std::abs(portNum), portNum < 0) {
@@ -78,7 +78,7 @@ namespace CPSLO {
 
   /**
    *
-   * CP ROBOT DIGITAL OUT
+   *  DIGITAL OUT
    *
    */
   DigitalOut::DigitalOut(int portNum) : output(std::abs(portNum)) {
@@ -101,7 +101,7 @@ namespace CPSLO {
 
   /**
    *
-   * CP ROBOT MOTOR SET
+   *  MOTOR SET
    *
    */
   MotorSet::MotorSet(std::initializer_list<Motor *> newMotors) {
@@ -131,7 +131,7 @@ namespace CPSLO {
 
   /**
    *
-   * CP ROBOT MOTOR LIST
+   *  MOTOR LIST
    *
    */
   MotorList::MotorList(std::initializer_list<int> ports) {
@@ -145,7 +145,7 @@ namespace CPSLO {
 
   /**
    *
-   * CP ROBOT DIGITAL OUT LIST
+   *  DIGITAL OUT LIST
    *
    */
   DigitalOutList::DigitalOutList(std::initializer_list<int> ports) {
@@ -159,10 +159,10 @@ namespace CPSLO {
 
   /**
    *
-   * CP ROBOT MOTOR CONTROLLER BIND
+   *  MOTOR CONTROLLER BIND
    *
    */
-  ControllerBind::ControllerBind(AbstractMotor *m, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, enum BindMode bm) {
+  ControllerBind::ControllerBind(AbstractMotor *m, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, int speed, enum BindMode bm) {
     this->motors = m;
     this->buttonPrimary = bp;
     this->buttonSecondary = bs;
@@ -170,7 +170,7 @@ namespace CPSLO {
     this->numPositions = 0;
     this->releasedButtonPrimary = true;
     this->bindMode = bm;
-    this->speed = 127;
+    this->speed = speed;
     for (int pos : p) {
       this->positions.push_back(pos);
       this->numPositions ++;
@@ -219,6 +219,54 @@ namespace CPSLO {
       this->positionIndex = 1 - this->positionIndex;
       this->motors->setSpeed(this->speed * this->positionIndex);
     }
+  }
+
+  /**
+   *
+   * CONTROLLER BIND BUILDER
+   *
+   */
+  ControllerBindBuilder::ControllerBindBuilder() {
+    this->bindMode = HOLD;
+    this->buttonPrimary = pros::E_CONTROLLER_DIGITAL_A;
+    this->buttonSecondary = pros::E_CONTROLLER_DIGITAL_A;
+    this->initialPos = 0;
+    this->speed = 127;
+  }
+  ControllerBind *ControllerBindBuilder::build() {
+    return new ControllerBind(this->motors, this->buttonPrimary, this->buttonSecondary, this->initialPos, this->positions, this->speed, this->bindMode);
+  }
+  ControllerBindBuilder *ControllerBindBuilder::withMotors(AbstractMotor *motors) {
+    this->motors = motors;
+    return this;
+  }
+  ControllerBindBuilder *ControllerBindBuilder::withButton(pros::controller_digital_e_t buttonPrimary) {
+    this->buttonPrimary = buttonPrimary;
+      this->buttonSecondary = buttonPrimary;
+    return this;
+  }
+  ControllerBindBuilder *ControllerBindBuilder::withButton(pros::controller_digital_e_t buttonPrimary, pros::controller_digital_e_t buttonSecondary) {
+    this->buttonPrimary = buttonPrimary;
+    this->buttonSecondary = buttonSecondary;
+    return this;
+  }
+  ControllerBindBuilder *ControllerBindBuilder::withPositions(std::vector<int> positions) {
+    for (int p : positions) {
+      this->positions.push_back(p);
+    }
+    return this;
+  }
+  ControllerBindBuilder *ControllerBindBuilder::withInitialPosition(int initialPos) {
+    this->initialPos = initialPos;
+    return this;
+  }
+  ControllerBindBuilder *ControllerBindBuilder::withSpeed(int speed) {
+    this->speed = speed;
+    return this;
+  }
+  ControllerBindBuilder *ControllerBindBuilder::withBindMode(enum BindMode bindMode) {
+    this->bindMode = bindMode;
+    return this;
   }
 
 }

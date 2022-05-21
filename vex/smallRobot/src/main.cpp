@@ -24,10 +24,29 @@ void initialize() {
 	right = new CPSLO::MotorSet({motors->get(15), motors->get(17)});
 	forebar = new CPSLO::MotorSet({motors->get(5), motors->get(6)});
 	//Then we pair any simple controls
-	intakeBind = new CPSLO::ControllerBind(motors->get(4), pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2, 0, std::vector<int>{}, CPSLO::HOLD);
-	forebarBind = new CPSLO::ControllerBind(forebar, pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1, 0, std::vector<int>{}, CPSLO::HOLD);
-	clawAngleBind = new CPSLO::ControllerBind(motors->get(19), pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A, 0, std::vector<int>{0, 900}, CPSLO::STEP);
-	clawBind = new CPSLO::ControllerBind(digitalOuts->get(1), pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B, 0, std::vector<int>{}, CPSLO::TOGGLE);
+	intakeBind = (new CPSLO::ControllerBindBuilder())
+	->withMotors(motors->get(4))
+	->withButton(pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2)
+	->build();
+	forebarBind = (new CPSLO::ControllerBindBuilder())
+	->withMotors(forebar)
+	->withButton(pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1)
+	->build();
+	clawAngleBind = (new CPSLO::ControllerBindBuilder())
+	->withMotors(motors->get(19))
+	->withButton(pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A)
+	->withPositions(std::vector<int>{0, 900})
+	->withBindMode(CPSLO::STEP)
+	->build();
+	clawBind = (new CPSLO::ControllerBindBuilder())
+	->withMotors(digitalOuts->get(1))
+	->withButton(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B)
+	->withBindMode(CPSLO::TOGGLE)
+	->build();
+	//(motors->get(4), pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2, 0, std::vector<int>{}, CPSLO::HOLD);
+	// forebarBind = new CPSLO::ControllerBind(forebar, pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1, 0, std::vector<int>{}, CPSLO::HOLD);
+	// clawAngleBind = new CPSLO::ControllerBind(motors->get(19), pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A, 0, std::vector<int>{0, 900}, CPSLO::STEP);
+	// clawBind = new CPSLO::ControllerBind(digitalOuts->get(1), pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B, 0, std::vector<int>{}, CPSLO::TOGGLE);
 	//After setting up all our motors, we create vectors of drive motors and controller binds
 	std::vector<CPSLO::AbstractMotor *> driveMotors({left, right});
 	std::vector<CPSLO::ControllerBind *> binds({intakeBind, forebarBind, clawAngleBind, clawBind});

@@ -83,8 +83,31 @@ namespace CPSLO {
     void controlCycleStep(bool pressedPrimary, bool pressedSecondary);
     void controlCycleHold(bool pressedPrimary, bool pressedSecondary);
   public:
-    ControllerBind(AbstractMotor *m, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, enum BindMode bm);
+    ControllerBind(AbstractMotor *m, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, int speed, enum BindMode bm);
     void controlCycle(pros::Controller controller);
+  };
+
+  class ControllerBindBuilder {
+  private:
+    AbstractMotor *motors;
+    pros::controller_digital_e_t buttonPrimary;
+    pros::controller_digital_e_t buttonSecondary;
+    std::vector<int> positions;
+    bool releasedButtonPrimary;
+    bool releasedButtonSecondary;
+    enum BindMode bindMode;
+    int initialPos;
+    int speed;
+  public:
+    ControllerBindBuilder();
+    ControllerBind *build();
+    ControllerBindBuilder *withMotors(AbstractMotor *motors);
+    ControllerBindBuilder *withButton(pros::controller_digital_e_t buttonPrimary);
+    ControllerBindBuilder *withButton(pros::controller_digital_e_t buttonPrimary, pros::controller_digital_e_t buttonSecondary);
+    ControllerBindBuilder *withPositions(std::vector<int> positions);
+    ControllerBindBuilder *withInitialPosition(int initialPos);
+    ControllerBindBuilder *withSpeed(int speed);
+    ControllerBindBuilder *withBindMode(enum BindMode bindMode);
   };
 
   class Robot {

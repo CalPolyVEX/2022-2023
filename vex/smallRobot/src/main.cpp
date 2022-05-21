@@ -1,13 +1,13 @@
 #include "main.h"
-#include "CPRobotDriver.hpp"
+#include "CPSLORobotDriver.hpp"
 // #include "arduinoSensors.hpp"
 
 //We have to declare our pointers up here for any global variables
-CPRobotMotorList *motors = NULL;
-CPRobotDigitalOutList *digitalOuts = NULL;
-CPRobotDriver *robot = NULL;
-CPRobotMotorSet *left, *right, *forebar = NULL;
-CPRobotControllerBind *intakeBind, *forebarBind, *clawAngleBind, *clawBind = NULL;
+CPSLO::MotorList *motors = NULL;
+CPSLO::DigitalOutList *digitalOuts = NULL;
+CPSLO::Robot *robot = NULL;
+CPSLO::MotorSet *left, *right, *forebar = NULL;
+CPSLO::ControllerBind *intakeBind, *forebarBind, *clawAngleBind, *clawBind = NULL;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -17,22 +17,22 @@ CPRobotControllerBind *intakeBind, *forebarBind, *clawAngleBind, *clawBind = NUL
  */
 void initialize() {
 	//First we have to list out all the motors we're using. Negative port numbers denote reversed direction
-	motors = new CPRobotMotorList({-2, -3, 4, 5, -6, 7, 14, 15, 17, 19, 20});
-	digitalOuts = new CPRobotDigitalOutList({1, 2});
+	motors = new CPSLO::MotorList({-2, -3, 4, 5, -6, 7, 14, 15, 17, 19, 20});
+	digitalOuts = new CPSLO::DigitalOutList({1, 2});
 	//Then we specify which motors should be treated as groups
-	left = new CPRobotMotorSet({motors->get(2), motors->get(3)});
-	right = new CPRobotMotorSet({motors->get(15), motors->get(17)});
-	forebar = new CPRobotMotorSet({motors->get(5), motors->get(6)});
+	left = new CPSLO::MotorSet({motors->get(2), motors->get(3)});
+	right = new CPSLO::MotorSet({motors->get(15), motors->get(17)});
+	forebar = new CPSLO::MotorSet({motors->get(5), motors->get(6)});
 	//Then we pair any simple controls
-	intakeBind = new CPRobotControllerBind(motors->get(4), pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2, 0, std::vector<int>{}, HOLD);
-	forebarBind = new CPRobotControllerBind(forebar, pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1, 0, std::vector<int>{}, HOLD);
-	clawAngleBind = new CPRobotControllerBind(motors->get(19), pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A, 0, std::vector<int>{0, 900}, STEP);
-	clawBind = new CPRobotControllerBind(digitalOuts->get(1), pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B, 0, std::vector<int>{}, TOGGLE);
+	intakeBind = new CPSLO::ControllerBind(motors->get(4), pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2, 0, std::vector<int>{}, CPSLO::HOLD);
+	forebarBind = new CPSLO::ControllerBind(forebar, pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1, 0, std::vector<int>{}, CPSLO::HOLD);
+	clawAngleBind = new CPSLO::ControllerBind(motors->get(19), pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A, 0, std::vector<int>{0, 900}, CPSLO::STEP);
+	clawBind = new CPSLO::ControllerBind(digitalOuts->get(1), pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B, 0, std::vector<int>{}, CPSLO::TOGGLE);
 	//After setting up all our motors, we create vectors of drive motors and controller binds
-	std::vector<CPRobotAbstractMotor *> driveMotors({left, right});
-	std::vector<CPRobotControllerBind *> binds({intakeBind, forebarBind, clawAngleBind, clawBind});
+	std::vector<CPSLO::AbstractMotor *> driveMotors({left, right});
+	std::vector<CPSLO::ControllerBind *> binds({intakeBind, forebarBind, clawAngleBind, clawBind});
 	//Finally, we initialize the robot driver instance, passing these two vectors and an enum to denote drive mode
-	robot = new CPRobotDriver(driveMotors, ARCADE, binds);
+	robot = new CPSLO::Robot(driveMotors, CPSLO::ARCADE, binds);
 	//Initalize the LCD, and print
 	pros::lcd::initialize();
 	pros::lcd::set_text(0, "Robot Initialized");

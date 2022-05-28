@@ -82,7 +82,6 @@ namespace CPSLO {
   }
   void Robot::resetRotation() {
     this->rotationOffset = this->getRawRotation();
-    pros::lcd::set_text(2, std::to_string(this->rotationOffset));
   }
 
   /**
@@ -272,11 +271,11 @@ namespace CPSLO {
   ControllerBind *ControllerBindBuilder::bind() {
     return new ControllerBind(this->motors, this->func, this->buttonPrimary, this->buttonSecondary, this->initialPos, this->positions, this->speed, this->bindMode);
   }
-  ControllerBindBuilder *ControllerBindBuilder::withMotors(AbstractMotor *motors) {
+  ControllerBindBuilder *ControllerBindBuilder::useMotors(AbstractMotor *motors) {
     this->motors = motors;
     return this;
   }
-  ControllerBindBuilder *ControllerBindBuilder::withFunction(std::function<void()> func) {
+  ControllerBindBuilder *ControllerBindBuilder::useFunction(std::function<void()> func) {
     this->func = func;
     return this;
   }

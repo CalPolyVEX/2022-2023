@@ -103,8 +103,8 @@ namespace CPSLO {
   public:
     ControllerBindBuilder();
     ControllerBind *bind();
-    ControllerBindBuilder *withMotors(AbstractMotor *motors);
-    ControllerBindBuilder *withFunction(std::function<void()> func);
+    ControllerBindBuilder *useMotors(AbstractMotor *motors);
+    ControllerBindBuilder *useFunction(std::function<void()> func);
     ControllerBindBuilder *on(pros::controller_digital_e_t buttonPrimary);
     ControllerBindBuilder *on(pros::controller_digital_e_t buttonPrimary, pros::controller_digital_e_t buttonSecondary);
     ControllerBindBuilder *withPositions(std::vector<int> positions);

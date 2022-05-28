@@ -27,30 +27,29 @@ void initialize() {
 	// forebar = new CPSLO::MotorSet({motors->get(5), motors->get(6)});
 	//Then we pair any simple controls
 	resetRotationBind = (new CPSLO::ControllerBindBuilder())
-	// ->withMotors(motors->get(4))
-	->on(pros::E_CONTROLLER_DIGITAL_Y)
-	->withFunction([] { robot->resetRotation(); })
-	->bind();
+		->on(pros::E_CONTROLLER_DIGITAL_Y)
+		->useFunction([] { robot->resetRotation(); })
+		->bind();
 	/*
 	intakeBind = (new CPSLO::ControllerBindBuilder())
-	->withMotors(motors->get(4))
-	->on(pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2)
-	->bind();
+		->useMotors(motors->get(4))
+		->on(pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2)
+		->bind();
 	forebarBind = (new CPSLO::ControllerBindBuilder())
-	->withMotors(forebar)
-	->on(pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1)
-	->bind();
+		->useMotors(forebar)
+		->on(pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1)
+		->bind();
 	clawAngleBind = (new CPSLO::ControllerBindBuilder())
-	->withMotors(motors->get(19))
-	->on(pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A)
-	->withPositions(std::vector<int>{0, 900})
-	->withBindMode(CPSLO::STEP)
-	->bind();
+		->useMotors(motors->get(19))
+		->on(pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A)
+		->withPositions(std::vector<int>{0, 900})
+		->withBindMode(CPSLO::STEP)
+		->bind();
 	clawBind = (new CPSLO::ControllerBindBuilder())
-	->withMotors(digitalOuts->get(1))
-	->on(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B)
-	->withBindMode(CPSLO::TOGGLE)
-	->bind();
+		->useMotors(digitalOuts->get(1))
+		->on(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B)
+		->withBindMode(CPSLO::TOGGLE)
+		->bind();
 	*/
 	//(motors->get(4), pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2, 0, std::vector<int>{}, CPSLO::HOLD);
 	// forebarBind = new CPSLO::ControllerBind(forebar, pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1, 0, std::vector<int>{}, CPSLO::HOLD);

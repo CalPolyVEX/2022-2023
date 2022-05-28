@@ -70,6 +70,7 @@ namespace CPSLO {
   class ControllerBind {
   private:
     AbstractMotor *motors;
+    std::function<void()> func;
     pros::controller_digital_e_t buttonPrimary;
     pros::controller_digital_e_t buttonSecondary;
     std::vector<int> positions;
@@ -83,13 +84,14 @@ namespace CPSLO {
     void controlCycleStep(bool pressedPrimary, bool pressedSecondary);
     void controlCycleHold(bool pressedPrimary, bool pressedSecondary);
   public:
-    ControllerBind(AbstractMotor *m, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, int speed, enum BindMode bm);
+    ControllerBind(AbstractMotor *m, std::function<void()> f, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, int speed, enum BindMode bm);
     void controlCycle(pros::Controller controller);
   };
 
   class ControllerBindBuilder {
   private:
     AbstractMotor *motors;
+    std::function<void()> func;
     pros::controller_digital_e_t buttonPrimary;
     pros::controller_digital_e_t buttonSecondary;
     std::vector<int> positions;
@@ -100,10 +102,11 @@ namespace CPSLO {
     int speed;
   public:
     ControllerBindBuilder();
-    ControllerBind *build();
+    ControllerBind *bind();
     ControllerBindBuilder *withMotors(AbstractMotor *motors);
-    ControllerBindBuilder *withButton(pros::controller_digital_e_t buttonPrimary);
-    ControllerBindBuilder *withButton(pros::controller_digital_e_t buttonPrimary, pros::controller_digital_e_t buttonSecondary);
+    ControllerBindBuilder *withFunction(std::function<void()> func);
+    ControllerBindBuilder *on(pros::controller_digital_e_t buttonPrimary);
+    ControllerBindBuilder *on(pros::controller_digital_e_t buttonPrimary, pros::controller_digital_e_t buttonSecondary);
     ControllerBindBuilder *withPositions(std::vector<int> positions);
     ControllerBindBuilder *withInitialPosition(int initialPos);
     ControllerBindBuilder *withSpeed(int speed);
@@ -116,13 +119,16 @@ namespace CPSLO {
     DriveMode driveMode;
     pros::Controller controller;
     std::vector<ControllerBind *> controllerBinds;
-    pros::Imu gyro;
+    pros::Imu rotation;
+    double rotationOffset;
   public:
     Robot(std::vector<AbstractMotor *> driveMotors, DriveMode mode, std::vector<ControllerBind *> controllerBinds, int gyroPort);
     void setSpeed(int speed);
     void controlCycle();
     pros::Controller getController();
+    double getRawRotation();
     double getRotation();
+    void resetRotation();
   };
 
 

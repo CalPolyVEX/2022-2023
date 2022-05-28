@@ -7,7 +7,8 @@ namespace CPSLO {
    * Robot
    *
    */
-  Robot::Robot(std::vector<AbstractMotor *> driveMotors, DriveMode mode, std::vector<ControllerBind *> controllerBinds, int gyroPort) : controller(pros::E_CONTROLLER_MASTER), gyro(gyroPort) {
+  Robot::Robot(std::vector<AbstractMotor *> driveMotors, DriveMode mode, std::vector<ControllerBind *> controllerBinds, int gyroPort) : controller(pros::E_CONTROLLER_MASTER), rotation(gyroPort) {
+    this->rotationOffset = 0;
     for (AbstractMotor *motorSet : driveMotors) {
       this->driveMotors.push_back(motorSet);
     }
@@ -73,7 +74,15 @@ namespace CPSLO {
     return controller;
   }
   double Robot::getRotation() {
-    return this->gyro.get_heading();
+    return this->getRawRotation() - this->rotationOffset;
+  }
+  double Robot::getRawRotation() {
+    double heading = this->rotation.get_heading();
+    return (heading == PROS_ERR_F ? 0 : heading);
+  }
+  void Robot::resetRotation() {
+    this->rotationOffset = this->getRawRotation();
+    pros::lcd::set_text(2, std::to_string(this->rotationOffset));
   }
 
   /**
@@ -181,8 +190,9 @@ namespace CPSLO {
    *  MOTOR CONTROLLER BIND
    *
    */
-  ControllerBind::ControllerBind(AbstractMotor *m, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, int speed, enum BindMode bm) {
+  ControllerBind::ControllerBind(AbstractMotor *m, std::function<void()> f, pros::controller_digital_e_t bp, pros::controller_digital_e_t bs, int i, std::vector<int> p, int speed, enum BindMode bm) {
     this->motors = m;
+    this->func = f;
     this->buttonPrimary = bp;
     this->buttonSecondary = bs;
     this->positionIndex = 0;
@@ -194,21 +204,26 @@ namespace CPSLO {
       this->positions.push_back(pos);
       this->numPositions ++;
     }
-    this->motors->moveTo(i, 127);
+    if (this->motors != NULL) this->motors->moveTo(i, this->speed);
   }
   void ControllerBind::controlCycle(pros::Controller controller) {
     bool pressedPrimary = controller.get_digital(this->buttonPrimary);
     bool pressedSecondary = (this->buttonSecondary ? controller.get_digital(this->buttonSecondary) : false);
-    switch(this->bindMode) {
-      case TOGGLE:
-        this->controlCycleToggle(pressedPrimary);
-        break;
-      case HOLD:
-        this->controlCycleHold(pressedPrimary, pressedSecondary);
-        break;
-      case STEP:
-        this->controlCycleStep(pressedPrimary, pressedSecondary);
-        break;
+    if (this->motors != NULL) {
+      switch(this->bindMode) {
+        case TOGGLE:
+          this->controlCycleToggle(pressedPrimary);
+          break;
+        case HOLD:
+          this->controlCycleHold(pressedPrimary, pressedSecondary);
+          break;
+        case STEP:
+          this->controlCycleStep(pressedPrimary, pressedSecondary);
+          break;
+      }
+    }
+    if (this->func != NULL && (pressedPrimary || pressedSecondary)) {
+      this->func();
     }
     this->releasedButtonPrimary = !pressedPrimary;
     this->releasedButtonSecondary = !pressedSecondary;
@@ -246,25 +261,31 @@ namespace CPSLO {
    *
    */
   ControllerBindBuilder::ControllerBindBuilder() {
+    this->func = NULL;
+    this->motors = NULL;
     this->bindMode = HOLD;
     this->buttonPrimary = pros::E_CONTROLLER_DIGITAL_A;
     this->buttonSecondary = pros::E_CONTROLLER_DIGITAL_A;
     this->initialPos = 0;
     this->speed = 127;
   }
-  ControllerBind *ControllerBindBuilder::build() {
-    return new ControllerBind(this->motors, this->buttonPrimary, this->buttonSecondary, this->initialPos, this->positions, this->speed, this->bindMode);
+  ControllerBind *ControllerBindBuilder::bind() {
+    return new ControllerBind(this->motors, this->func, this->buttonPrimary, this->buttonSecondary, this->initialPos, this->positions, this->speed, this->bindMode);
   }
   ControllerBindBuilder *ControllerBindBuilder::withMotors(AbstractMotor *motors) {
     this->motors = motors;
     return this;
   }
-  ControllerBindBuilder *ControllerBindBuilder::withButton(pros::controller_digital_e_t buttonPrimary) {
+  ControllerBindBuilder *ControllerBindBuilder::withFunction(std::function<void()> func) {
+    this->func = func;
+    return this;
+  }
+  ControllerBindBuilder *ControllerBindBuilder::on(pros::controller_digital_e_t buttonPrimary) {
     this->buttonPrimary = buttonPrimary;
       this->buttonSecondary = buttonPrimary;
     return this;
   }
-  ControllerBindBuilder *ControllerBindBuilder::withButton(pros::controller_digital_e_t buttonPrimary, pros::controller_digital_e_t buttonSecondary) {
+  ControllerBindBuilder *ControllerBindBuilder::on(pros::controller_digital_e_t buttonPrimary, pros::controller_digital_e_t buttonSecondary) {
     this->buttonPrimary = buttonPrimary;
     this->buttonSecondary = buttonSecondary;
     return this;

@@ -6,7 +6,7 @@
 
 namespace CPSLO {
 
-  enum DriveMode { TANK, ARCADE, XDRIVE };
+  enum DriveMode { TANK, ARCADE, XDRIVE, FIELD_RELATIVE_XDRIVE };
   enum BindMode { TOGGLE, STEP, HOLD };
 
   class AbstractMotor {
@@ -116,11 +116,13 @@ namespace CPSLO {
     DriveMode driveMode;
     pros::Controller controller;
     std::vector<ControllerBind *> controllerBinds;
+    pros::Imu gyro;
   public:
-    Robot(std::vector<AbstractMotor *> driveMotors, DriveMode mode, std::vector<ControllerBind *> cb);
+    Robot(std::vector<AbstractMotor *> driveMotors, DriveMode mode, std::vector<ControllerBind *> controllerBinds, int gyroPort);
     void setSpeed(int speed);
     void controlCycle();
     pros::Controller getController();
+    double getRotation();
   };
 
 

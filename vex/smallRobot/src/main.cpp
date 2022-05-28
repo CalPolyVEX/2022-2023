@@ -17,13 +17,14 @@ CPSLO::ControllerBind *intakeBind, *forebarBind, *clawAngleBind, *clawBind = NUL
  */
 void initialize() {
 	//First we have to list out all the motors we're using. Negative port numbers denote reversed direction
-	motors = new CPSLO::MotorList({-2, -3, 4, 5, -6, 7, 14, 15, 17, 19, 20});
-	digitalOuts = new CPSLO::DigitalOutList({1, 2});
+	motors = new CPSLO::MotorList({4, 5, 6, 7});
+	// digitalOuts = new CPSLO::DigitalOutList({1, 2});
 	//Then we specify which motors should be treated as groups
-	left = new CPSLO::MotorSet({motors->get(2), motors->get(3)});
-	right = new CPSLO::MotorSet({motors->get(15), motors->get(17)});
-	forebar = new CPSLO::MotorSet({motors->get(5), motors->get(6)});
+	// left = new CPSLO::MotorSet({motors->get(2), motors->get(3)});
+	// right = new CPSLO::MotorSet({motors->get(15), motors->get(17)});
+	// forebar = new CPSLO::MotorSet({motors->get(5), motors->get(6)});
 	//Then we pair any simple controls
+	/*
 	intakeBind = (new CPSLO::ControllerBindBuilder())
 	->withMotors(motors->get(4))
 	->withButton(pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2)
@@ -43,15 +44,17 @@ void initialize() {
 	->withButton(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B)
 	->withBindMode(CPSLO::TOGGLE)
 	->build();
+	*/
 	//(motors->get(4), pros::E_CONTROLLER_DIGITAL_R1, pros::E_CONTROLLER_DIGITAL_R2, 0, std::vector<int>{}, CPSLO::HOLD);
 	// forebarBind = new CPSLO::ControllerBind(forebar, pros::E_CONTROLLER_DIGITAL_L2, pros::E_CONTROLLER_DIGITAL_L1, 0, std::vector<int>{}, CPSLO::HOLD);
 	// clawAngleBind = new CPSLO::ControllerBind(motors->get(19), pros::E_CONTROLLER_DIGITAL_X, pros::E_CONTROLLER_DIGITAL_A, 0, std::vector<int>{0, 900}, CPSLO::STEP);
 	// clawBind = new CPSLO::ControllerBind(digitalOuts->get(1), pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_B, 0, std::vector<int>{}, CPSLO::TOGGLE);
 	//After setting up all our motors, we create vectors of drive motors and controller binds
-	std::vector<CPSLO::AbstractMotor *> driveMotors({left, right});
-	std::vector<CPSLO::ControllerBind *> binds({intakeBind, forebarBind, clawAngleBind, clawBind});
+	std::vector<CPSLO::AbstractMotor *> driveMotors({motors->get(4), motors->get(5), motors->get(6), motors->get(7)});
+	// std::vector<CPSLO::ControllerBind *> binds({intakeBind, forebarBind, clawAngleBind, clawBind});
+	std::vector<CPSLO::ControllerBind *> binds({});
 	//Finally, we initialize the robot driver instance, passing these two vectors and an enum to denote drive mode
-	robot = new CPSLO::Robot(driveMotors, CPSLO::ARCADE, binds);
+	robot = new CPSLO::Robot(driveMotors, CPSLO::FIELD_RELATIVE_XDRIVE, binds, 10);
 	//Initalize the LCD, and print
 	pros::lcd::initialize();
 	pros::lcd::set_text(0, "Robot Initialized");

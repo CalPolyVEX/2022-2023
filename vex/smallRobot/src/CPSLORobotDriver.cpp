@@ -7,12 +7,12 @@ namespace CPSLO {
    * Robot
    *
    */
-  Robot::Robot(std::vector<AbstractMotor *> driveMotors, DriveMode mode, std::vector<ControllerBind *> cb) : controller(pros::E_CONTROLLER_MASTER) {
+  Robot::Robot(std::vector<AbstractMotor *> driveMotors, DriveMode mode, std::vector<ControllerBind *> controllerBinds, int gyroPort) : controller(pros::E_CONTROLLER_MASTER), gyro(gyroPort) {
     for (AbstractMotor *motorSet : driveMotors) {
       this->driveMotors.push_back(motorSet);
     }
     this->driveMode = mode;
-    for (ControllerBind *controllerBind : cb) {
+    for (ControllerBind *controllerBind : controllerBinds) {
       this->controllerBinds.push_back(controllerBind);
     }
   }
@@ -39,9 +39,25 @@ namespace CPSLO {
         break;
       }
       case XDRIVE: {
-        int turn = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-        int h = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        int v = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        int turn = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        int h = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+        int v = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        this->driveMotors[0]->setSpeed(v + h + turn); //Front left (then clockwise, bird's eye view)
+        this->driveMotors[1]->setSpeed(-v + h + turn); //Front right
+        this->driveMotors[2]->setSpeed(-v - h + turn); //Back right
+        this->driveMotors[3]->setSpeed(v - h + turn); //Back left
+        break;
+      }
+      case FIELD_RELATIVE_XDRIVE: {
+        //Get measurements
+        int turn = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        int x = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+        int y = this->controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        float angle = this->getRotation() / 180 * M_PI;
+        //Convert to field relative
+        int h = x * cos(angle) - y * sin(angle);
+        int v = x * sin(angle) + y * cos(angle);
+        //Same old XDrive math :)
         this->driveMotors[0]->setSpeed(v + h + turn); //Front left (then clockwise, bird's eye view)
         this->driveMotors[1]->setSpeed(-v + h + turn); //Front right
         this->driveMotors[2]->setSpeed(-v - h + turn); //Back right
@@ -55,6 +71,9 @@ namespace CPSLO {
   }
   pros::Controller Robot::getController() {
     return controller;
+  }
+  double Robot::getRotation() {
+    return this->gyro.get_heading();
   }
 
   /**

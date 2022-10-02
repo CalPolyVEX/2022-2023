@@ -1,0 +1,18 @@
+{
+  "configurations": [
+    {
+      "compileCommands": "${workspaceFolder}/compile_commands.json",
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "cStandard": "c17",
+      "cppStandard": "c++17"
+    }
+  ],
+  "version": 4
+}

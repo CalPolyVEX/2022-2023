@@ -104,12 +104,12 @@ void opcontrol() {
 			Shooter2.move_voltage(0);
 		}
 		else if (motorOn == 1) {
- 			Shooter1.move_voltage(12000);
- 			Shooter2.move_voltage(-12000);
+ 			Shooter1.move_velocity(166);
+ 			Shooter2.move_velocity(-166);
 		}
 		else if(motorOn == 2) {
-	 		Shooter1.move_voltage(-12000);
-	 		Shooter2.move_voltage(12000);
+	 		Shooter1.move_velocity(-166);
+	 		Shooter2.move_velocity(166);
 		}
 
 		if(master.get_digital_new_press(DIGITAL_A)) {

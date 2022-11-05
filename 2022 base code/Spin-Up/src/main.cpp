@@ -6,6 +6,9 @@ const int8_t LEFT_WHEELS_PORT_2 = 3;
 const int8_t RIGHT_WHEELS_PORT_1 = 17;
 const int8_t RIGHT_WHEELS_PORT_2 = 15;
 */
+
+#define MOTOR_MAX_SPEED 100
+
 const int8_t FRONT_LEFT_PORT = 5;
 const int8_t FRONT_RIGHT_PORT = 2;
 const int8_t BACK_LEFT_PORT = 4;
@@ -87,7 +90,27 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+ // 1000 units = 18 inches
+ // 1000 units of turning = slightly more than 90 degrees
+ // not much of a difference between move_absolute and move_relative 
+void autonomous() {
+	pros::Motor front_left_mtr(FRONT_LEFT_PORT);
+	pros::Motor front_right_mtr(FRONT_RIGHT_PORT);
+	pros::Motor back_left_mtr(BACK_LEFT_PORT);
+	pros::Motor back_right_mtr(BACK_RIGHT_PORT);
+
+	/* MOVE STRAIGHT
+	front_left_mtr.move_absolute(-1000, MOTOR_MAX_SPEED);
+	front_right_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+	back_left_mtr.move_absolute(-1000, MOTOR_MAX_SPEED);
+	back_right_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+	*/
+
+	front_left_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+	front_right_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+	back_left_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+	back_right_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task

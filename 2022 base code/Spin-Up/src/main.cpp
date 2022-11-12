@@ -129,6 +129,7 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 	int motorOn = 0;
+	int rpm;
 	while (true) {
 
 		//field centric x-drive
@@ -154,14 +155,16 @@ void opcontrol() {
 		pros::lcd::set_text(6, "Current2: " + std::to_string(Shooter1.get_current_draw()));
 
 
-		if(master.get_digital(DIGITAL_R1)) { //turn on shooter in one direction
+		if(master.get_digital(DIGITAL_R1)) { //turn on shooter for high speed
 			motorOn = 1;
+			rpm = 166;
 		}
 		else if(master.get_digital(DIGITAL_R2)) { //turn off shooter
 			motorOn = 0;
 		}
-		else if(master.get_digital(DIGITAL_L1)) { //turn on shooter in other direction for testing
+		else if(master.get_digital(DIGITAL_L1)) { //turn on shooter for lower speed
 			motorOn = 2;
+			rpm = 140;
 		}
 
 		//set motor voltages to values to either max or zero voltage
@@ -169,13 +172,28 @@ void opcontrol() {
 			Shooter1.move_voltage(0);
 			Shooter2.move_voltage(0);
 		}
-		else if (motorOn == 1) {
- 			Shooter1.move_velocity(166);
- 			Shooter2.move_velocity(-166);
+		else if (motorOn == 1 || motorOn == 2) {
+ 			Shooter1.move_velocity(rpm);
+ 			Shooter2.move_velocity(-rpm);
 		}
-		else if(motorOn == 2) {
-	 		Shooter1.move_velocity(140);
-	 		Shooter2.move_velocity(-140);
+
+		if(master.get_digital_new_press(DIGITAL_UP)){
+			rpm = rpm + 5;
+			if(rpm > 200){
+				rpm = 200;
+			}
+			pros::lcd::set_text(1, "RPM_Get: " + std::to_string(rpm));
+	 		Shooter1.move_velocity(rpm);
+	 		Shooter2.move_velocity(-(rpm));
+		}
+		else if(master.get_digital_new_press(DIGITAL_DOWN)){
+			rpm = rpm - 5;
+			if(rpm < 0){
+				rpm = 0;
+			}
+			pros::lcd::set_text(1, "RPM_Get: " + std::to_string(rpm));
+	 		Shooter1.move_velocity(rpm);
+	 		Shooter2.move_velocity(-(rpm));
 		}
 
 		if(master.get_digital_new_press(DIGITAL_A)) {

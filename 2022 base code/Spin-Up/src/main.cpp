@@ -16,6 +16,17 @@ const int8_t GYRO_PORT = 12;
 const int8_t SHOOTER_PORT1 = 14;
 const int8_t SHOOTER_PORT2 = 15;
 
+#define MOTOR_MAX_SPEED 100
+
+//Component declaration
+pros::Motor front_left_mtr(FRONT_LEFT_PORT);
+pros::Motor front_right_mtr(FRONT_RIGHT_PORT);
+pros::Motor back_left_mtr(BACK_LEFT_PORT);
+pros::Motor back_right_mtr(BACK_RIGHT_PORT);
+
+pros::Motor Shooter1(SHOOTER_PORT1);
+pros::Motor Shooter2(SHOOTER_PORT2);
+
 pros::Imu gyro(GYRO_PORT);
 double gyro_offset = 0;
 
@@ -54,17 +65,23 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous() {}
+void autonomous() {
+
+	/* MOVE STRAIGHT*/
+	// front_left_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+	// front_right_mtr.move_absolute(-1000, MOTOR_MAX_SPEED);
+	// back_left_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
+	// back_right_mtr.move_absolute(-1000, MOTOR_MAX_SPEED);
+
+	front_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+	front_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+	back_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+	back_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+}
 
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-	pros::Motor front_left_mtr(FRONT_LEFT_PORT);
-	pros::Motor front_right_mtr(FRONT_RIGHT_PORT);
-	pros::Motor back_left_mtr(BACK_LEFT_PORT);
-	pros::Motor back_right_mtr(BACK_RIGHT_PORT);
-	pros::Motor Shooter1(SHOOTER_PORT1);
-	pros::Motor Shooter2(SHOOTER_PORT2);
 	int motorOn = 0;
 	while (true) {
 
@@ -87,6 +104,9 @@ void opcontrol() {
 
 		pros::lcd::set_text(3, "RPM1: " + std::to_string(18*Shooter2.get_actual_velocity())); //print rpm of shooter motors for testing
 		pros::lcd::set_text(4, "RPM2: " + std::to_string(18*Shooter1.get_actual_velocity()));
+		pros::lcd::set_text(5, "Current1: " + std::to_string(Shooter2.get_current_draw()));
+		pros::lcd::set_text(6, "Current2: " + std::to_string(Shooter1.get_current_draw()));
+
 
 		if(master.get_digital(DIGITAL_R1)) { //turn on shooter in one direction
 			motorOn = 1;
@@ -108,8 +128,8 @@ void opcontrol() {
  			Shooter2.move_velocity(-166);
 		}
 		else if(motorOn == 2) {
-	 		Shooter1.move_velocity(-166);
-	 		Shooter2.move_velocity(166);
+	 		Shooter1.move_velocity(140);
+	 		Shooter2.move_velocity(-140);
 		}
 
 		if(master.get_digital_new_press(DIGITAL_A)) {

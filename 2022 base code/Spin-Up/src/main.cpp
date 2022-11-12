@@ -13,7 +13,7 @@ const int8_t BACK_RIGHT_PORT = 3;
 
 const int8_t GYRO_PORT = 12;
 
-const int8_t SHOOTER_PORT1 = 13;
+const int8_t SHOOTER_PORT1 = 14;
 const int8_t SHOOTER_PORT2 = 15;
 
 #define MOTOR_MAX_SPEED 100

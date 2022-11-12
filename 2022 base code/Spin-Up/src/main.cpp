@@ -13,7 +13,7 @@ const int8_t BACK_RIGHT_PORT = 3;
 
 const int8_t GYRO_PORT = 12;
 
-const int8_t SHOOTER_PORT1 = 14;
+const int8_t SHOOTER_PORT1 = 13;
 const int8_t SHOOTER_PORT2 = 15;
 
 #define MOTOR_MAX_SPEED 100
@@ -44,6 +44,50 @@ void resetRotation() {
 	gyro_offset = getRawRotation();
 }
 
+void moveForward(int dist){
+	int rot = (dist*1000)/18;
+
+	front_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	front_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+	back_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+
+	pros::delay(500);
+}
+
+void moveReverse(int dist2){
+	int rot = (dist2*1000)/18;
+
+	front_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+	front_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+	back_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+
+	pros::delay(500);
+}
+
+void moveLeft(int dist){
+	int rot = (dist*1000)/18;
+
+	front_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+	front_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+	back_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+
+	pros::delay(500);
+}
+
+void moveRight(int dist){
+	int rot = (dist*1000)/18;
+
+	front_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	front_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+	back_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+
+	pros::delay(500);
+}
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -63,20 +107,22 @@ void initialize() {
 
 void disabled() {}
 
-void competition_initialize() {}
+void competition_initialize() {
+	gyro.reset();
+}
 
 void autonomous() {
 
 	/* MOVE STRAIGHT*/
-	// front_left_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
-	// front_right_mtr.move_absolute(-1000, MOTOR_MAX_SPEED);
-	// back_left_mtr.move_absolute(1000, MOTOR_MAX_SPEED);
-	// back_right_mtr.move_absolute(-1000, MOTOR_MAX_SPEED);
+	moveReverse(10);
+	moveForward(15);
+	moveLeft(10);
+	moveRight(10);
 
-	front_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
-	front_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
-	back_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
-	back_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+	// front_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+	// front_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+	// back_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
+	// back_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
 }
 
 void opcontrol() {

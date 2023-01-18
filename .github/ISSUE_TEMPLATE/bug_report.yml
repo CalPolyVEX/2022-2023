@@ -1,4 +1,4 @@
-+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema
 name: 🐛 Bug Report
 description: Report a reproducible bug or regression to help us improve
 title: "[BUG REPORT]: <title>"

@@ -214,7 +214,7 @@ void opcontrol() {
 		if(master.get_digital(DIGITAL_Y))
 		{
 			Intake1.move_velocity(0);
-			Intake2.move_velocity(0);
+			Intake2.move_velocity(0);  
 		}
 
 		//X-drive

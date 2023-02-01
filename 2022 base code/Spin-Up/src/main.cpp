@@ -6,7 +6,7 @@ const int8_t LEFT_WHEELS_PORT_2 = 3;
 const int8_t RIGHT_WHEELS_PORT_1 = 17;
 const int8_t RIGHT_WHEELS_PORT_2 = 15;
 */
-const int8_t FRONT_LEFT_PORT = 5;
+const int8_t FRONT_LEFT_PORT = 1;
 const int8_t FRONT_RIGHT_PORT = 2;
 const int8_t BACK_LEFT_PORT = 4;
 const int8_t BACK_RIGHT_PORT = 3;
@@ -15,6 +15,10 @@ const int8_t GYRO_PORT = 12;
 
 const int8_t SHOOTER_PORT1 = 14;
 const int8_t SHOOTER_PORT2 = 15;
+
+const int8_t INTAKE_PORT1 = 5;
+const int8_t INTAKE_PORT2 = 7;
+
 
 #define MOTOR_MAX_SPEED 100
 
@@ -26,6 +30,8 @@ pros::Motor back_right_mtr(BACK_RIGHT_PORT);
 
 pros::Motor Shooter1(SHOOTER_PORT1);
 pros::Motor Shooter2(SHOOTER_PORT2);
+pros::Motor Intake1(INTAKE_PORT1);
+pros::Motor Intake2(INTAKE_PORT2);
 
 pros::Imu gyro(GYRO_PORT);
 double gyro_offset = 0;
@@ -163,7 +169,7 @@ void opcontrol() {
 			motorOn = 0;
 		}
 		else if(master.get_digital(DIGITAL_L1)) { //turn on shooter for lower speed
-			motorOn = 2;
+			motorOn = 1;
 			rpm = 140;
 		}
 
@@ -172,7 +178,7 @@ void opcontrol() {
 			Shooter1.move_voltage(0);
 			Shooter2.move_voltage(0);
 		}
-		else if (motorOn == 1 || motorOn == 2) {
+		else if (motorOn == 1) {
  			Shooter1.move_velocity(rpm);
  			Shooter2.move_velocity(-rpm);
 		}
@@ -198,6 +204,17 @@ void opcontrol() {
 
 		if(master.get_digital_new_press(DIGITAL_A)) {
 			gyro.reset(); //manual reset of gyro for testing
+		}
+
+		if(master.get_digital(DIGITAL_X))
+		{
+			Intake1.move_velocity(200);
+			Intake2.move_velocity(-200);
+		}
+		if(master.get_digital(DIGITAL_Y))
+		{
+			Intake1.move_velocity(0);
+			Intake2.move_velocity(0);
 		}
 
 		//X-drive

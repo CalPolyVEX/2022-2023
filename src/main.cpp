@@ -6,18 +6,18 @@ const int8_t LEFT_WHEELS_PORT_2 = 3;
 const int8_t RIGHT_WHEELS_PORT_1 = 17;
 const int8_t RIGHT_WHEELS_PORT_2 = 15;
 */
-const int8_t FRONT_LEFT_PORT = 1;
+const int8_t FRONT_LEFT_PORT = 13;
 const int8_t FRONT_RIGHT_PORT = 2;
-const int8_t BACK_LEFT_PORT = 4;
-const int8_t BACK_RIGHT_PORT = 3;
+const int8_t BACK_LEFT_PORT = 15;
+const int8_t BACK_RIGHT_PORT = 5;
 
-const int8_t GYRO_PORT = 12;
+const int8_t GYRO_PORT = 7;
 
-const int8_t SHOOTER_PORT1 = 14;
-const int8_t SHOOTER_PORT2 = 15;
+const int8_t SHOOTER_PORT1 = 18; // might have switch
+const int8_t SHOOTER_PORT2 = 17;
 
-const int8_t INTAKE_PORT1 = 5;
-const int8_t INTAKE_PORT2 = 7;
+const int8_t INTAKE_PORT1 = 3; // might have switch
+const int8_t INTAKE_PORT2 = 14;
 
 const char INDEXER_PORT = 'A'; // three wire
 
@@ -37,7 +37,7 @@ pros::Motor Intake2(INTAKE_PORT2);
 pros::Imu gyro(GYRO_PORT);
 double gyro_offset = 0;
 
-// pnuematics
+// pneumatics
 pros::ADIDigitalOut indexer_piston(INDEXER_PORT);
 
 //helper functions to work with field-centric x-drive
@@ -216,13 +216,17 @@ void opcontrol() {
 			Intake1.move_velocity(200);
 			Intake2.move_velocity(-200);
 		}
-		if(master.get_digital(DIGITAL_Y))
+		else if(master.get_digital(DIGITAL_Y))
 		{
-			Intake1.move_velocity(0);
-			Intake2.move_velocity(0);  
+			Intake1.move_velocity(-200);
+			Intake2.move_velocity(200);  
 		}
+    else {
+      Intake1.move_velocity(0);
+			Intake2.move_velocity(0);  
+    }
     
-    if (master.get_digital( DIGITAL_RIGHT)) {
+    if (master.get_digital_new_press( DIGITAL_RIGHT)) {
       indexer_piston.set_value(indexer_piston_state);
       indexer_piston_state = !indexer_piston_state;
     }

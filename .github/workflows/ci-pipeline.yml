@@ -1,0 +1,24 @@
+name: Build PROS
+# Controls when the workflow will run
+on:
+  # run on every push on the master/main branch
+  push:
+    # Test commits on branches and pull requests to master/main
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - master
+      - main
+  pull_request:
+# The sequence of runs in this workflow:
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Repository Code
+      - uses: actions/checkout@v3
+      - name: Build Repository Code
+        uses: fishsticks89/pros-build@v1

@@ -1,21 +1,44 @@
 //Green Robot
 
 #include "main.h"
+#include "RobotSpecifics.h"
 
-const int8_t FRONT_LEFT_PORT = 13;
-const int8_t FRONT_RIGHT_PORT = 2;
-const int8_t BACK_LEFT_PORT = 15;
-const int8_t BACK_RIGHT_PORT = 5;
+#ifdef GREEN
 
-const int8_t GYRO_PORT = 7;
+	const int8_t FRONT_LEFT_PORT = 13;
+	const int8_t FRONT_RIGHT_PORT = 2;
+	const int8_t BACK_LEFT_PORT = 15;
+	const int8_t BACK_RIGHT_PORT = 5;
 
-const int8_t SHOOTER_PORT1 = 18; // might have switch
-const int8_t SHOOTER_PORT2 = 17;
+	const int8_t GYRO_PORT = 7;
 
-const int8_t INTAKE_PORT_R = 3; // might have switch
-const int8_t INTAKE_PORT_L = 14;
+	const int8_t SHOOTER_PORT1 = 18; //outside motor
+	const int8_t SHOOTER_PORT2 = 17; //inside motor
 
-const char INDEXER_PORT = 'A'; // three wire
+	const int8_t INTAKE_PORT_R = 3; // might have switch
+	const int8_t INTAKE_PORT_L = 14;
+
+	const char INDEXER_PORT = 'A'; // three wire
+
+#else // Gold Robot
+
+	const int8_t FRONT_LEFT_PORT = 13;
+	const int8_t FRONT_RIGHT_PORT = 3;
+	const int8_t BACK_LEFT_PORT = 12;
+	const int8_t BACK_RIGHT_PORT = 2;
+
+	const int8_t GYRO_PORT = 6;
+
+	const int8_t SHOOTER_PORT1 = 9; //outside motor
+	const int8_t SHOOTER_PORT2 = 8; //inside motor
+
+	const int8_t INTAKE_PORT_R = 1; // might have switch
+	const int8_t INTAKE_PORT_L = 17;
+
+	const char INDEXER_PORT = 'A'; // three wire
+
+#endif
+
 
 #define MOTOR_MAX_SPEED 100
 
@@ -119,16 +142,10 @@ void competition_initialize() {
 
 void autonomous() {
 
-	/* MOVE STRAIGHT*/
 	moveReverse(10);
 	moveForward(15);
 	moveLeft(10);
 	moveRight(10);
-
-	// front_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
-	// front_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
-	// back_left_mtr.move_relative(1000, MOTOR_MAX_SPEED);
-	// back_right_mtr.move_relative(1000, MOTOR_MAX_SPEED);
 }
 
 void opcontrol() {
@@ -215,18 +232,17 @@ void opcontrol() {
 		else if(master.get_digital(DIGITAL_Y))
 		{
 			IntakeR.move_velocity(-200);
-			IntakeL.move_velocity(200);  
+			IntakeL.move_velocity(200);
 		}
     	else {
       		IntakeR.move_velocity(0);
-			IntakeL.move_velocity(0);  
+			IntakeL.move_velocity(0);
     	}
-    
+
     if (master.get_digital_new_press( DIGITAL_RIGHT)) {
       indexer_piston.set_value(indexer_piston_state);
       indexer_piston_state = !indexer_piston_state;
     }
-
 
 		//X-drive
 		/*

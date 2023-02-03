@@ -39,7 +39,6 @@
 
 #endif
 
-
 #define MOTOR_MAX_SPEED 100
 
 //Component declaration
@@ -226,20 +225,20 @@ void opcontrol() {
 
 		if(master.get_digital(DIGITAL_X))
 		{
-			IntakeR.move_velocity(200);
-			IntakeL.move_velocity(-200);
+			IntakeR.move_velocity(-200);
+			IntakeL.move_velocity(200);
 		}
 		else if(master.get_digital(DIGITAL_Y))
 		{
-			IntakeR.move_velocity(-200);
-			IntakeL.move_velocity(200);
+			IntakeR.move_velocity(200);
+			IntakeL.move_velocity(-200);
 		}
     	else {
       		IntakeR.move_velocity(0);
 			IntakeL.move_velocity(0);
     	}
 
-    if (master.get_digital_new_press( DIGITAL_RIGHT)) {
+    if (master.get_digital_new_press(DIGITAL_RIGHT)) {
       indexer_piston.set_value(indexer_piston_state);
       indexer_piston_state = !indexer_piston_state;
     }

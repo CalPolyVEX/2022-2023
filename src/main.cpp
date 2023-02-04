@@ -1,5 +1,11 @@
 //Green Robot
 
+//Notes
+/*
+	For corner shots, around 110 - 115 units for Shooter
+	For roller shots, around 130
+*/
+
 #include "main.h"
 #include "RobotSpecifics.h"
 
@@ -17,6 +23,7 @@
 
 	const int8_t INTAKE_PORT_R = 3; // might have switch
 	const int8_t INTAKE_PORT_L = 14;
+	const int8_t INTAKE_PORT_THREE = 4;
 
 	const char INDEXER_PORT = 'A'; // three wire
 
@@ -34,6 +41,7 @@
 
 	const int8_t INTAKE_PORT_R = 1; // might have switch
 	const int8_t INTAKE_PORT_L = 17;
+	const int8_t INTAKE_PORT_THREE = 16;
 
 	const char INDEXER_PORT = 'A'; // three wire
 
@@ -51,6 +59,7 @@ pros::Motor Shooter1(SHOOTER_PORT1);
 pros::Motor Shooter2(SHOOTER_PORT2);
 pros::Motor IntakeR(INTAKE_PORT_R);
 pros::Motor IntakeL(INTAKE_PORT_L);
+pros::Motor Intake3(INTAKE_PORT_THREE);
 
 pros::Imu gyro(GYRO_PORT);
 double gyro_offset = 0;
@@ -112,6 +121,24 @@ void moveRight(int dist){
 	front_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
 	back_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
 	back_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+
+	pros::delay(500);
+}
+
+void shoot(int vel){
+
+	Shooter1.move_velocity(vel);
+	Shooter2.move_velocity(-(vel));
+
+	pros::delay(500);
+	indexer_piston.set_value(true);
+
+	pros::delay(300);
+	indexer_piston.set_value(false);
+
+	pros::delay(100);
+	Shooter1.move_velocity(0);
+	Shooter2.move_velocity(0);
 
 	pros::delay(500);
 }
@@ -227,20 +254,28 @@ void opcontrol() {
 		{
 			IntakeR.move_velocity(-200);
 			IntakeL.move_velocity(200);
+			Intake3.move_velocity(-600);
 		}
 		else if(master.get_digital(DIGITAL_Y))
 		{
 			IntakeR.move_velocity(200);
 			IntakeL.move_velocity(-200);
+			Intake3.move_velocity(600);
 		}
     	else {
       		IntakeR.move_velocity(0);
 			IntakeL.move_velocity(0);
+			Intake3.move_velocity(0);
     	}
 
     if (master.get_digital_new_press(DIGITAL_RIGHT)) {
       indexer_piston.set_value(indexer_piston_state);
       indexer_piston_state = !indexer_piston_state;
+    }
+	if (master.get_digital_new_press(DIGITAL_LEFT)) {
+      shoot(130);
+	  pros::delay(1000);
+	  shoot(130);
     }
 
 		//X-drive

@@ -7,7 +7,7 @@
 // ---
 
 // Change the lines here based on what robot we're compiling for.
- //#define GREEN
- #define GOLD
+ #define GREEN
+ //#define GOLD
 
 #endif

@@ -168,10 +168,6 @@ void competition_initialize() {
 
 void autonomous() {
 
-	moveReverse(10);
-	moveForward(15);
-	moveLeft(10);
-	moveRight(10);
 }
 
 void opcontrol() {
@@ -214,7 +210,7 @@ void opcontrol() {
 		}
 		else if(master.get_digital(DIGITAL_L1)) { //turn on shooter for lower speed
 			motorOn = 1;
-			rpm = 140;
+			rpm = 110;
 		}
 
 		//set motor voltages to values to either max or zero voltage

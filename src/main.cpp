@@ -1,5 +1,3 @@
-//Green Robot
-
 //Notes
 /*
 	For corner shots, around 110 - 115 units for Shooter
@@ -82,7 +80,7 @@ void resetRotation() {
 }
 
 void moveForward(int dist){
-	int rot = (dist*1000)/18;
+	int rot = (dist*1000)/13;
 
 	front_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
 	front_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
@@ -93,7 +91,7 @@ void moveForward(int dist){
 }
 
 void moveReverse(int dist2){
-	int rot = (dist2*1000)/18;
+	int rot = (dist2*1000)/13;
 
 	front_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
 	front_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
@@ -104,7 +102,7 @@ void moveReverse(int dist2){
 }
 
 void moveLeft(int dist){
-	int rot = (dist*1000)/18;
+	int rot = (dist*1000)/13;
 
 	front_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
 	front_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
@@ -115,12 +113,34 @@ void moveLeft(int dist){
 }
 
 void moveRight(int dist){
-	int rot = (dist*1000)/18;
+	int rot = (dist*1000)/13;
 
 	front_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
 	front_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
 	back_left_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
 	back_right_mtr.move_relative(-rot, MOTOR_MAX_SPEED);
+
+	pros::delay(500);
+}
+
+void rotateClockwise(int angle){
+	int rot = (angle*1000)/81;
+
+	front_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	front_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+
+	pros::delay(500);
+}
+
+void rotateCounterClockwise(int angle){
+	int rot = -(angle*1000)/81;
+
+	front_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	front_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_left_mtr.move_relative(rot, MOTOR_MAX_SPEED);
+	back_right_mtr.move_relative(rot, MOTOR_MAX_SPEED);
 
 	pros::delay(500);
 }
@@ -171,7 +191,7 @@ void autonomous() {
 }
 
 void opcontrol() {
-  bool indexer_piston_state = false;
+ 	bool indexer_piston_state = false;
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 	int motorOn = 0;
@@ -272,6 +292,9 @@ void opcontrol() {
       shoot(130);
 	  pros::delay(1000);
 	  shoot(130);
+    }
+	if (master.get_digital_new_press(DIGITAL_L2)) {
+      moveForward(5);
     }
 
 		//X-drive

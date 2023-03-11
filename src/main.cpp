@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "RobotSpecifics.h"
+#define M_PI 3.1415
 
 #ifdef GREEN
 
@@ -150,7 +151,7 @@ void shoot(int vel){
 	Shooter1.move_velocity(vel);
 	Shooter2.move_velocity(-(vel));
 
-	pros::delay(500);
+	pros::delay(800);
 	indexer_piston.set_value(true);
 
 	pros::delay(300);
@@ -161,6 +162,17 @@ void shoot(int vel){
 	Shooter2.move_velocity(0);
 
 	pros::delay(500);
+}
+
+// 300 works for team side
+void spin_roller(int time) {
+	IntakeR.move_velocity(-200);
+	IntakeL.move_velocity(200);
+	Intake3.move_velocity(-600);
+	pros::delay(time);
+	IntakeR.move_velocity(0);
+	IntakeL.move_velocity(0);
+	Intake3.move_velocity(0);
 }
 
 void on_center_button() {
@@ -186,8 +198,19 @@ void competition_initialize() {
 	gyro.reset();
 }
 
+// start on the tile right of the roller
 void autonomous() {
-
+	/*
+	moveRight(40);
+	pros::delay(1000);
+	moveForward(10);
+	pros::delay(1000);
+	spin_roller(300);
+	pros::delay(1000);
+	*/
+	shoot(200);
+	pros::delay(1000);
+	shoot(200);
 }
 
 void opcontrol() {
@@ -289,12 +312,12 @@ void opcontrol() {
       indexer_piston_state = !indexer_piston_state;
     }
 	if (master.get_digital_new_press(DIGITAL_LEFT)) {
-      shoot(130);
-	  pros::delay(1000);
-	  shoot(130);
+      shoot(150);
+	  pros::delay(1500);
+	  shoot(150);
     }
 	if (master.get_digital_new_press(DIGITAL_L2)) {
-      moveForward(5);
+      spin_roller(300);
     }
 
 		//X-drive

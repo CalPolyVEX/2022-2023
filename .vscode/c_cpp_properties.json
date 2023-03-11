@@ -1,9 +1,10 @@
 {
   "configurations": [
     {
-      "compileCommands": "${workspaceFolder}/compile_commands.json",
+      "compileCommands": "c:\\Users\\nipun\\2022-2023 Vex\\2022-2023\\compile_commands.json",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "c:\\Users\\nipun\\2022-2023 Vex\\2022-2023\\include"
       ],
       "defines": [
         "_DEBUG",
@@ -11,7 +12,16 @@
         "_UNICODE"
       ],
       "cStandard": "c17",
-      "cppStandard": "c++17"
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-arm",
+      "browse": {
+        "path": [
+          "c:\\Users\\nipun\\2022-2023 Vex\\2022-2023"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": ""
+      },
+      "compilerPath": "c:\\Users\\nipun\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++"
     }
   ],
   "version": 4

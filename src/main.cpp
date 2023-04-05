@@ -190,6 +190,8 @@ void initialize() {
 
 	pros::lcd::register_btn1_cb(on_center_button);
 	resetRotation();
+	pros::lcd::set_background_color(50,191,68);
+	pros::lcd::set_text_color(198, 146, 20);
 }
 
 void disabled() {}

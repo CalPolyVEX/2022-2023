@@ -1,15 +1,6 @@
 name: Build PROS
 # Controls when the workflow will run
-on:
-  # run on every push on the master/main branch
-  push:
-    # Test commits on branches and pull requests to master/main
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - master
-      - main
+on: [push, pull_request, workflow_dispatch]
 # The sequence of runs in this workflow:
 jobs:
   # This workflow contains a single job called "build"

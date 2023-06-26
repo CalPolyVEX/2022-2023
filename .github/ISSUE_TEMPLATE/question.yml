@@ -6,7 +6,7 @@ title: "[QUESTION]: <title>"
 labels: [question]
 assignees: []
 body:
-- type: textarea
+  - type: textarea
     id: summary
     attributes:
       label: Summary of the question
@@ -14,7 +14,7 @@ body:
       placeholder: Ex. How do I configure [...]
     validations:
       required: true
-- type: textarea
+  - type: textarea
     id: details
     attributes:
       label: Details of the question

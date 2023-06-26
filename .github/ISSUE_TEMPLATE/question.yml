@@ -1,7 +1,6 @@
 # https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema
 name: ❓ Ask a Question
-description: Report a reproducible bug or regression to help us improve
-about: Ask a question about a bug, feature, or anything in the project!
+description: Ask a question about a bug, feature, or anything in the project!
 title: "[QUESTION]: <title>"
 labels: [question]
 assignees: []
